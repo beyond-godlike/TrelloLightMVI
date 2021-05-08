@@ -1,49 +1,58 @@
 package com.unava.dia.trellolightmvi.ui.main
 
+import android.database.Observable
 import android.os.Bundle
 import android.view.Menu
-import android.view.MenuItem
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.snackbar.Snackbar
 import com.unava.dia.trellolightmvi.R
 import com.unava.dia.trellolightmvi.mviBase.MviView
 import com.unava.dia.trellolightmvi.ui.base.BaseActivity
-import javax.inject.Inject
+import com.unava.dia.trellolightmvi.ui.fragments.board.BoardFragment
+import com.unava.dia.trellolightmvi.ui.fragments.main.MainFragment
+import com.unava.dia.trellolightmvi.ui.fragments.task.TaskFragment
+import com.unava.dia.trellolightmvi.ui.main.MainViewModel_Factory.newInstance
+import com.unava.dia.trellolightmvi.util.APP_ACTIVITY
+import com.unava.dia.trellolightmvi.util.replaceFragment
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : BaseActivity(), MviView<MainIntent, MainViewState> {
 
-    @Inject
-    lateinit var viewModel: MainViewModel
+    private lateinit var viewModel: MainViewModel
 
     //private val clickIntent = PublishSubject.create<MainIntent.ClickIntent>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        this.bind()
+        APP_ACTIVITY = this
+        setupRecyclerView()
         this.bindViewModel()
-        setSupportActionBar(findViewById(R.id.toolbar))
 
-        findViewById<FloatingActionButton>(R.id.fab).setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
+        if (savedInstanceState == null) {
+            replaceFragment(MainFragment(), false)
         }
     }
 
     override fun layoutId(): Int = R.layout.activity_main
 
     override fun bind() {
-        //rv.layoutManager = GridLayoutManager(this, 1)
+        //newsRv.layoutManager = GridLayoutManager(this, 1)
         //viewModel.processIntents(intents())
         //viewModel.states().observe(this, Observer { if (it != null) render(it) })
     }
 
     private fun bindViewModel() {
-        this.viewModel = ViewModelProvider(this, viewModelFactory).get(MainViewModel::class.java)
+        this.viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         //this.observeViewModel()
     }
 
+    private fun setupRecyclerView() {
+
+    }
+
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.menu_main, menu)
         return true
     }
@@ -56,16 +65,8 @@ class MainActivity : BaseActivity(), MviView<MainIntent, MainViewState> {
                 //progressBar.gone()
             }
             //if (!articles.isEmpty()) {
-            //rv.adapter = NewsAdapter(boards, { clickItem -> clickIntent.onNext(HomeIntent.ClickIntent(clickItem)) })
+                //newsRv.adapter = NewsAdapter(articles, { clickItem -> clickIntent.onNext(HomeIntent.ClickIntent(clickItem)) })
             //}
         }
     }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.action_settings -> true
-            else -> super.onOptionsItemSelected(item)
-        }
-    }
-
 }
