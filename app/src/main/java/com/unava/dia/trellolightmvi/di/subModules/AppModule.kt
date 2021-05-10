@@ -2,6 +2,7 @@ package com.unava.dia.trellolightmvi.di.subModules
 
 import android.app.Application
 import android.content.Context
+import androidx.appcompat.app.AppCompatActivity
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
