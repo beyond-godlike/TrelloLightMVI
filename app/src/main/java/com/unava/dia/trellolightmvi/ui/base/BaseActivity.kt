@@ -19,13 +19,10 @@ abstract class BaseActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(layoutId())
-        bind()
     }
 
     @LayoutRes
     abstract fun layoutId(): Int
-
-    abstract fun bind()
 
     fun showToast(message: String, appContext: Context) {
         Toast.makeText(appContext, message, Toast.LENGTH_SHORT).show()
