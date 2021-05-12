@@ -3,26 +3,28 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/FirstFragment">
-
+    app:startDestination="@id/mainFragment">
     <fragment
-        android:id="@+id/FirstFragment"
-        android:name="com.unava.dia.trellolightmvi.ui.FirstFragment"
-        android:label="@string/first_fragment_label"
-        tools:layout="@layout/fragment_first">
-
+        android:id="@+id/mainFragment"
+        android:name="com.unava.dia.trellolightmvi.ui.fragments.main.MainFragment"
+        android:label="fragment_main"
+        tools:layout="@layout/fragment_main" >
         <action
-            android:id="@+id/action_FirstFragment_to_SecondFragment"
-            app:destination="@id/SecondFragment" />
+            android:id="@+id/action_mainFragment_to_boardFragment"
+            app:destination="@id/boardFragment" />
     </fragment>
     <fragment
-        android:id="@+id/SecondFragment"
-        android:name="com.unava.dia.trellolightmvi.ui.SecondFragment"
-        android:label="@string/second_fragment_label"
-        tools:layout="@layout/fragment_second">
-
+        android:id="@+id/boardFragment"
+        android:name="com.unava.dia.trellolightmvi.ui.fragments.board.BoardFragment"
+        android:label="fragment_board"
+        tools:layout="@layout/fragment_board" >
         <action
-            android:id="@+id/action_SecondFragment_to_FirstFragment"
-            app:destination="@id/FirstFragment" />
+            android:id="@+id/action_boardFragment_to_taskFragment"
+            app:destination="@id/taskFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/taskFragment"
+        android:name="com.unava.dia.trellolightmvi.ui.fragments.task.TaskFragment"
+        android:label="fragment_task"
+        tools:layout="@layout/fragment_task" />
 </navigation>
