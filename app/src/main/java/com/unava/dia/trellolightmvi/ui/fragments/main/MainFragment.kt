@@ -1,6 +1,5 @@
 package com.unava.dia.trellolightmvi.ui.fragments.main
 
-import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.lifecycleScope
@@ -25,21 +24,16 @@ class MainFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::infl
     private var boardsListAdapter: BoardsListAdapter? = null
     override fun layoutId(): Int = R.layout.fragment_main
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        setupRecyclerView()
-
+    override fun initView() {
         binding.fab.setOnClickListener {
             replaceFragment(BoardFragment(-1))
         }
-        this.observeViewModel()
-
         lifecycleScope.launch {
             viewModel.userIntent.send(MainIntent.GetBoards)
         }
     }
 
-    private fun observeViewModel() {
+    override fun observeViewModel() {
         lifecycleScope.launch {
             viewModel.state.collect {
                 when (it) {
@@ -49,7 +43,7 @@ class MainFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::infl
                         renderList(it.boards)
                     }
                     is MainState.Error -> {
-                        showToast(it.error!!, requireContext())
+                        showToast(it.error!!)
                     }
                 }
             }
@@ -74,7 +68,7 @@ class MainFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::infl
         )
     }
 
-    private fun setupRecyclerView() {
+    override fun setupRecyclerView() {
         val displayMetrics = requireContext().resources.displayMetrics
         val dpWidth = displayMetrics.widthPixels / displayMetrics.density
         val columns = (dpWidth / (200 + 20)).toInt()

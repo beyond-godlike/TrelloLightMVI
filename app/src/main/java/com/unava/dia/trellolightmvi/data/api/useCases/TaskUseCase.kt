@@ -25,4 +25,8 @@ class TaskUseCase @Inject constructor(private var taskRepository: TaskRepository
         taskRepository.insertTask(task)
     }
 
+    fun getTaskAsync(taskId: Int) : Task? {
+        return taskRepository.getTaskAsync(taskId)
+    }
+
 }

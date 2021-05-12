@@ -19,7 +19,7 @@ class TaskRepository(context: Context) {
     fun getTasks() = db.taskDao().getTasks()
     fun getTask(id: Int) = db.taskDao().getTask(id)
 
-    private fun getTaskAsync(id: Int): Task? = runBlocking(Dispatchers.Default) {
+    fun getTaskAsync(id: Int): Task? = runBlocking(Dispatchers.Default) {
         return@runBlocking async { db.taskDao().getTaskAsync(id) }.await()
     }
 
@@ -47,5 +47,9 @@ class TaskRepository(context: Context) {
 
     fun findRepositoriesForTask(boardId: Int): LiveData<List<Task>>? {
         return db.taskDao().getTasksForBoard(boardId)
+    }
+
+    fun findRepositoriesForBoardAsync(boardId: Int): List<Task>? = runBlocking(Dispatchers.Default) {
+        return@runBlocking async { db.taskDao().getTasksForBoardAsync(boardId) }.await()
     }
 }

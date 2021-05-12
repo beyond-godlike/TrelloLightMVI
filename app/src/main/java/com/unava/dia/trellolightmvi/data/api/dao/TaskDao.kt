@@ -18,6 +18,9 @@ interface TaskDao {
     @Query("SELECT * FROM Task WHERE boardId =:boardId")
     fun getTasksForBoard(boardId: Int): LiveData<List<Task>>
 
+    @Query("SELECT * FROM Task WHERE boardId =:boardId")
+    fun getTasksForBoardAsync(boardId: Int) : List<Task>
+
     @Query("SELECT * FROM Task WHERE id =:taskId")
     fun getTaskAsync(taskId: Int): Task
 

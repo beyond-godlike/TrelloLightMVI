@@ -22,6 +22,10 @@ class TasksUseCase @Inject constructor(
         return boardRepository.getBoard(id)
     }
 
+    fun getBoardAsync(id: Int): Board? {
+        return boardRepository.getBoardAsync(id)
+    }
+
     fun deleteBoard(id: Int) {
         boardRepository.deleteBoard(id)
     }
@@ -34,7 +38,7 @@ class TasksUseCase @Inject constructor(
         return boardRepository.insertBoard(board)
     }
 
-    fun findRepositoriesForTask(boardId: Int): LiveData<List<Task>>? {
-        return taskRepository.findRepositoriesForTask(boardId)
+    fun findRepositoriesForBoardAsync(boardId: Int): List<Task>? {
+        return taskRepository.findRepositoriesForBoardAsync(boardId)
     }
 }

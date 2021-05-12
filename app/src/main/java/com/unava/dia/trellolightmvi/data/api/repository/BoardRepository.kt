@@ -23,7 +23,7 @@ class BoardRepository(context: Context) {
     fun getBoard(id: Int) = db.boardDao().getBoard(id)
 
 
-    private fun getBoardAsync(id: Int): Board? = runBlocking(Dispatchers.Default) {
+    fun getBoardAsync(id: Int): Board? = runBlocking(Dispatchers.Default) {
         return@runBlocking async { db.boardDao().getBoardAsync(id) }.await()
     }
 
