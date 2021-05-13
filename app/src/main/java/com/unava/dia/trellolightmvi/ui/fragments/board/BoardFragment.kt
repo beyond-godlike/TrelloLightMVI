@@ -1,6 +1,9 @@
 package com.unava.dia.trellolightmvi.ui.fragments.board
 
+import android.os.Bundle
 import android.view.View
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.unava.dia.trellolightmvi.R
@@ -23,13 +26,16 @@ class BoardFragment(private var boardId: Int) :
     RecyclerItemClickListener.OnRecyclerViewItemClickListener {
 
     private var tasksListAdapter: TasksListAdapter? = null
-
-    @Inject
-    lateinit var viewModel: BoardViewModel
+    private lateinit var viewModel: BoardViewModel
 
     override fun layoutId(): Int = R.layout.fragment_board
 
     // boardId = -1 means we want to create new board
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        viewModel = ViewModelProvider(this).get(BoardViewModel::class.java)
+    }
 
     override fun initView() {
         binding.btAddCard.setOnClickListener {

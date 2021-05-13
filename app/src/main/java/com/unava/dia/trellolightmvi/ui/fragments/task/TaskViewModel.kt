@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-//@HiltViewModel
+@HiltViewModel
 class TaskViewModel @Inject constructor(private var useCase: TaskUseCase) : ViewModel() {
 
     val userIntent = Channel<TaskIntent>(Channel.UNLIMITED)

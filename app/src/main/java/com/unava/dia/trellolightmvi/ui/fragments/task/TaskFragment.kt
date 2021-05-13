@@ -1,11 +1,14 @@
 package com.unava.dia.trellolightmvi.ui.fragments.task
 
+import android.os.Bundle
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.unava.dia.trellolightmvi.R
 import com.unava.dia.trellolightmvi.data.Task
 import com.unava.dia.trellolightmvi.databinding.FragmentTaskBinding
 import com.unava.dia.trellolightmvi.ui.base.BaseFragment
 import com.unava.dia.trellolightmvi.ui.fragments.board.BoardFragment
+import com.unava.dia.trellolightmvi.ui.fragments.board.BoardViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -15,10 +18,14 @@ import javax.inject.Inject
 class TaskFragment(private var boardId: Int, private var taskId: Int) :
     BaseFragment<FragmentTaskBinding>(FragmentTaskBinding::inflate) {
 
-    @Inject
-    lateinit var viewModel: TaskViewModel
+    private lateinit var viewModel: TaskViewModel
 
     override fun layoutId(): Int = R.layout.fragment_task
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        viewModel = ViewModelProvider(this).get(TaskViewModel::class.java)
+    }
 
     override fun initView() {
         // taskId = -1 means new task

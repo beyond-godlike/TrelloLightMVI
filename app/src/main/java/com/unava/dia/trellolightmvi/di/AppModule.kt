@@ -1,4 +1,4 @@
-package com.unava.dia.trellolightmvi.di.subModules
+package com.unava.dia.trellolightmvi.di
 
 import android.app.Application
 import android.content.Context

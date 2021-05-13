@@ -1,7 +1,9 @@
 package com.unava.dia.trellolightmvi.ui.fragments.main
 
+import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.unava.dia.trellolightmvi.R
@@ -9,6 +11,7 @@ import com.unava.dia.trellolightmvi.data.Board
 import com.unava.dia.trellolightmvi.databinding.FragmentMainBinding
 import com.unava.dia.trellolightmvi.ui.base.BaseFragment
 import com.unava.dia.trellolightmvi.ui.fragments.board.BoardFragment
+import com.unava.dia.trellolightmvi.ui.fragments.board.BoardViewModel
 import com.unava.dia.trellolightmvi.util.RecyclerItemClickListener
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
@@ -19,10 +22,14 @@ import javax.inject.Inject
 class MainFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::inflate),
     RecyclerItemClickListener.OnRecyclerViewItemClickListener {
 
-    @Inject
-    lateinit var viewModel: MainViewModel
+    private lateinit var viewModel: MainViewModel
     private var boardsListAdapter: BoardsListAdapter? = null
     override fun layoutId(): Int = R.layout.fragment_main
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+    }
 
     override fun initView() {
         binding.fab.setOnClickListener {

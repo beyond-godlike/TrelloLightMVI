@@ -1,4 +1,4 @@
-package com.unava.dia.trellolightmvi.di.subModules
+package com.unava.dia.trellolightmvi.di
 
 import com.unava.dia.trellolightmvi.data.api.repository.BoardRepository
 import com.unava.dia.trellolightmvi.data.api.repository.TaskRepository
@@ -9,14 +9,13 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
+import dagger.hilt.android.scopes.ViewModelScoped
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
 @Module
-//@InstallIn(ViewModelComponent::class)
 @InstallIn(SingletonComponent::class)
 object UseCasesModule {
-    // use cases
     @Provides
     fun provideBoardsUseCase(boardRepository: BoardRepository): BoardsUseCase {
         return BoardsUseCase(boardRepository)
