@@ -39,13 +39,13 @@ abstract class BaseActivity : AppCompatActivity() {
             this.supportFragmentManager.beginTransaction()
                     .addToBackStack(null)
                     .replace(
-                            R.id.main_fragment_container,
+                            R.id.frameContainer,
                             fragment
                     ).commit()
         } else {
             this.supportFragmentManager.beginTransaction()
                     .replace(
-                            R.id.main_fragment_container,
+                            R.id.frameContainer,
                             fragment
                     ).commit()
         }

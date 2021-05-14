@@ -7,6 +7,5 @@ sealed class TaskState {
     data class TaskId(val id: Long?) : TaskState()
     data class CurrentTask(val task: Task?) : TaskState()
     data class Error(val error: String?) : TaskState()
-    object Deleted : TaskState()
-    object Saved : TaskState()
+    object Finished : TaskState()
 }

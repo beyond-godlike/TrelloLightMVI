@@ -48,7 +48,7 @@ class TaskViewModel @Inject constructor(private var useCase: TaskUseCase) : View
     private fun saveTask(task: Task) {
         viewModelScope.launch {
             useCase.insertTask(task)
-            _state.value = TaskState.Saved
+            _state.value = TaskState.Finished
         }
     }
 
@@ -61,7 +61,7 @@ class TaskViewModel @Inject constructor(private var useCase: TaskUseCase) : View
                 t.title = title
                 t.description = description
                 useCase.updateTask(t)
-                _state.value = TaskState.Saved
+                _state.value = TaskState.Finished
             } else {
                 _state.value = TaskState.Error("task is null")
             }
@@ -71,7 +71,7 @@ class TaskViewModel @Inject constructor(private var useCase: TaskUseCase) : View
     private fun deleteTask(taskId: Int) {
         viewModelScope.launch {
             useCase.deleteTask(taskId)
-            _state.value = TaskState.Deleted
+            _state.value = TaskState.Finished
         }
     }
 }

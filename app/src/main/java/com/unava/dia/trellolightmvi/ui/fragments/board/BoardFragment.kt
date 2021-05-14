@@ -1,8 +1,8 @@
 package com.unava.dia.trellolightmvi.ui.fragments.board
 
+import android.content.Context
 import android.os.Bundle
 import android.view.View
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,23 +18,23 @@ import com.unava.dia.trellolightmvi.util.RecyclerItemClickListener
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @AndroidEntryPoint
-class BoardFragment(private var boardId: Int) :
+class BoardFragment :
     BaseFragment<FragmentBoardBinding>(FragmentBoardBinding::inflate),
     RecyclerItemClickListener.OnRecyclerViewItemClickListener {
 
     private var tasksListAdapter: TasksListAdapter? = null
     private lateinit var viewModel: BoardViewModel
+    private var listener: BoardInteractionListener? = null
+    var boardId: Int = -1 // boardId = -1 means we want to create new board
 
     override fun layoutId(): Int = R.layout.fragment_board
-
-    // boardId = -1 means we want to create new board
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(this).get(BoardViewModel::class.java)
+        boardId = arguments?.getInt("board_id")!!
     }
 
     override fun initView() {
@@ -46,7 +46,7 @@ class BoardFragment(private var boardId: Int) :
                 }
                 // add task to existing board
             }
-            replaceFragment(TaskFragment(boardId, -1))
+            this.listener?.onNavigateToTaskFragment(boardId, -1)
         }
 
         binding.btDeleteBoard.setOnClickListener {
@@ -90,10 +90,10 @@ class BoardFragment(private var boardId: Int) :
                         renderTaskList(it.tasks)
                     }
                     is BoardState.Deleted -> {
-                        replaceFragment(MainFragment())
+                        listener?.onBoardFinished()
                     }
                     is BoardState.Saved -> {
-                        replaceFragment(MainFragment())
+                        listener?.onBoardFinished()
                     }
                 }
             }
@@ -116,11 +116,27 @@ class BoardFragment(private var boardId: Int) :
                 TasksListAdapter(list.toMutableList())
             binding.rvBoard.adapter = tasksListAdapter
         }
-        tasksListAdapter!!.addTasks(list)
     }
 
     override fun onItemClick(parentView: View, childView: View, position: Int) {
         val task = tasksListAdapter!!.getItem(position)
-        replaceFragment(TaskFragment(boardId, task.id!!))
+        listener?.onNavigateToTaskFragment(boardId, task.id!!)
+    }
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is BoardInteractionListener) {
+            listener = context
+        } else {
+            throw RuntimeException("$context must implement InteractionListener")
+        }
+    }
+    override fun onDetach() {
+        super.onDetach()
+        listener = null
+    }
+
+    interface BoardInteractionListener  {
+        fun onNavigateToTaskFragment(boardId: Int, taskId: Int)
+        fun onBoardFinished()
     }
 }

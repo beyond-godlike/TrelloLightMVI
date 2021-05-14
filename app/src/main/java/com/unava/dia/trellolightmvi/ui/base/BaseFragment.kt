@@ -8,7 +8,6 @@ import android.widget.Toast
 import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
-import com.unava.dia.trellolightmvi.R
 import com.unava.dia.trellolightmvi.util.Inflate
 
 abstract class BaseFragment<VB : ViewBinding>(private val inflate: Inflate<VB>) : Fragment() {
@@ -27,10 +26,8 @@ abstract class BaseFragment<VB : ViewBinding>(private val inflate: Inflate<VB>) 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //setupRecyclerView()
-        //observeViewModel()
-        initView()
         setupRecyclerView()
+        initView()
         observeViewModel()
     }
 
@@ -41,15 +38,6 @@ abstract class BaseFragment<VB : ViewBinding>(private val inflate: Inflate<VB>) 
 
     @LayoutRes
     abstract fun layoutId(): Int
-
-    fun replaceFragment(fragment: Fragment) {
-        requireActivity().supportFragmentManager.beginTransaction()
-            .replace(
-                R.id.main_fragment_container,
-                fragment
-            ).commit()
-
-    }
 
     abstract fun observeViewModel()
     abstract fun setupRecyclerView()

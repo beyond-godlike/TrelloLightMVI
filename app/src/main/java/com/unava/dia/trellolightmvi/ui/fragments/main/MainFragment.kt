@@ -1,5 +1,6 @@
 package com.unava.dia.trellolightmvi.ui.fragments.main
 
+import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.LiveData
@@ -10,13 +11,10 @@ import com.unava.dia.trellolightmvi.R
 import com.unava.dia.trellolightmvi.data.Board
 import com.unava.dia.trellolightmvi.databinding.FragmentMainBinding
 import com.unava.dia.trellolightmvi.ui.base.BaseFragment
-import com.unava.dia.trellolightmvi.ui.fragments.board.BoardFragment
-import com.unava.dia.trellolightmvi.ui.fragments.board.BoardViewModel
 import com.unava.dia.trellolightmvi.util.RecyclerItemClickListener
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::inflate),
@@ -25,6 +23,7 @@ class MainFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::infl
     private lateinit var viewModel: MainViewModel
     private var boardsListAdapter: BoardsListAdapter? = null
     override fun layoutId(): Int = R.layout.fragment_main
+    private var listener: MainInteractionListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,7 +32,7 @@ class MainFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::infl
 
     override fun initView() {
         binding.fab.setOnClickListener {
-            replaceFragment(BoardFragment(-1))
+            this.listener?.onCreateBoardClicked(-1)
         }
         lifecycleScope.launch {
             viewModel.userIntent.send(MainIntent.GetBoards)
@@ -87,6 +86,23 @@ class MainFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::infl
 
     override fun onItemClick(parentView: View, childView: View, position: Int) {
         val board = boardsListAdapter!!.getItem(position)
-        replaceFragment(BoardFragment(board.id!!))
+        this.listener?.onCreateBoardClicked(board.id!!)
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is MainInteractionListener) {
+            listener = context
+        } else {
+            throw RuntimeException("$context must implement InteractionListener")
+        }
+    }
+    override fun onDetach() {
+        super.onDetach()
+        listener = null
+    }
+
+    interface MainInteractionListener {
+        fun onCreateBoardClicked(boardId: Int)
     }
 }

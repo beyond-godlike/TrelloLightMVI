@@ -8,23 +8,28 @@
         android:id="@+id/mainFragment"
         android:name="com.unava.dia.trellolightmvi.ui.fragments.main.MainFragment"
         android:label="fragment_main"
-        tools:layout="@layout/fragment_main" >
-        <action
-            android:id="@+id/action_mainFragment_to_boardFragment"
-            app:destination="@id/boardFragment" />
-    </fragment>
+        tools:layout="@layout/fragment_main" />
     <fragment
         android:id="@+id/boardFragment"
         android:name="com.unava.dia.trellolightmvi.ui.fragments.board.BoardFragment"
         android:label="fragment_board"
         tools:layout="@layout/fragment_board" >
         <action
-            android:id="@+id/action_boardFragment_to_taskFragment"
-            app:destination="@id/taskFragment" />
+            android:id="@+id/action_boardFragment_to_mainFragment"
+            app:destination="@id/mainFragment" />
     </fragment>
     <fragment
         android:id="@+id/taskFragment"
         android:name="com.unava.dia.trellolightmvi.ui.fragments.task.TaskFragment"
         android:label="fragment_task"
-        tools:layout="@layout/fragment_task" />
+        tools:layout="@layout/fragment_task" >
+        <action
+            android:id="@+id/action_taskFragment_to_boardFragment"
+            app:destination="@id/boardFragment" />
+    </fragment>
+    <activity
+        android:id="@+id/mainActivity"
+        android:name="com.unava.dia.trellolightmvi.ui.main.MainActivity"
+        android:label="activity_main"
+        tools:layout="@layout/activity_main" />
 </navigation>
