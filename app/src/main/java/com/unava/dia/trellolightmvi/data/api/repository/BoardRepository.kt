@@ -4,16 +4,11 @@ import android.content.Context
 import com.unava.dia.trellolightmvi.data.Board
 import com.unava.dia.trellolightmvi.data.api.AppDatabase
 import kotlinx.coroutines.*
+import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
 
-// inject context
-class BoardRepository(context: Context) {
-
-    private val parentJob = Job()
-    private val coroutineContext: CoroutineContext
-        get() = parentJob + Dispatchers.Default
+class BoardRepository @Inject constructor(private var context: Context, private var coroutineContext: CoroutineContext) {
     private val scope = CoroutineScope(coroutineContext)
-
 
     private val db: AppDatabase = AppDatabase.getAppDataBase(context)!!
 

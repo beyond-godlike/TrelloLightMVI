@@ -61,13 +61,8 @@ class MainFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::infl
             viewLifecycleOwner, {
                 if (it.isNotEmpty()) {
                     binding.rvMain.visibility = View.VISIBLE
-                    if (boardsListAdapter == null) {
-                        boardsListAdapter =
-                            BoardsListAdapter(it.toMutableList())
-                        binding.rvMain.adapter = boardsListAdapter
-
-                    } else
-                        boardsListAdapter!!.addBoards(it)
+                    boardsListAdapter = BoardsListAdapter(it.toMutableList())
+                    binding.rvMain.adapter = boardsListAdapter
                 } else
                     binding.rvMain.visibility = View.GONE
             }
@@ -97,6 +92,7 @@ class MainFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::infl
             throw RuntimeException("$context must implement InteractionListener")
         }
     }
+
     override fun onDetach() {
         super.onDetach()
         listener = null

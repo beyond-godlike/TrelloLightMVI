@@ -41,4 +41,7 @@ class TasksUseCase @Inject constructor(
     fun findRepositoriesForBoardAsync(boardId: Int): List<Task>? {
         return taskRepository.findRepositoriesForBoardAsync(boardId)
     }
+    fun findRepositoriesForBoard(boardId: Int): LiveData<List<Task>>? {
+        return taskRepository.findRepositoriesForBoard(boardId)
+    }
 }

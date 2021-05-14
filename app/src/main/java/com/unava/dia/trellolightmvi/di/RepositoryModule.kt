@@ -15,6 +15,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ViewModelScoped
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
+import kotlin.coroutines.CoroutineContext
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -35,12 +36,12 @@ object RepositoryModule {
     }
 
     @Provides
-    fun provideBoardRepository(@ApplicationContext context: Context): BoardRepository {
-        return BoardRepository(context)
+    fun provideBoardRepository(@ApplicationContext context: Context, coroutineContext: CoroutineContext): BoardRepository {
+        return BoardRepository(context, coroutineContext)
     }
 
     @Provides
-    fun provideTaskRepository(@ApplicationContext context: Context): TaskRepository {
-        return TaskRepository(context)
+    fun provideTaskRepository(@ApplicationContext context: Context, coroutineContext: CoroutineContext): TaskRepository {
+        return TaskRepository(context, coroutineContext)
     }
 }

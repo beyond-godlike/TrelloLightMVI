@@ -3,8 +3,10 @@ package com.unava.dia.trellolightmvi.ui.fragments.board
 import android.content.Context
 import android.os.Bundle
 import android.view.View
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.unava.dia.trellolightmvi.R
 import com.unava.dia.trellolightmvi.data.Board
@@ -16,8 +18,16 @@ import com.unava.dia.trellolightmvi.ui.fragments.task.TaskFragment
 import com.unava.dia.trellolightmvi.ui.fragments.task.TasksListAdapter
 import com.unava.dia.trellolightmvi.util.RecyclerItemClickListener
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.channels.map
+import kotlinx.coroutines.channels.produce
+import kotlinx.coroutines.channels.sendBlocking
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import javax.inject.Inject
+import kotlin.coroutines.CoroutineContext
 
 @AndroidEntryPoint
 class BoardFragment :
@@ -29,12 +39,17 @@ class BoardFragment :
     private var listener: BoardInteractionListener? = null
     var boardId: Int = -1 // boardId = -1 means we want to create new board
 
+    @Inject
+    lateinit var coroutineContext: CoroutineContext
+    private lateinit var scope: CoroutineScope
+
     override fun layoutId(): Int = R.layout.fragment_board
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(this).get(BoardViewModel::class.java)
         boardId = arguments?.getInt("board_id")!!
+        scope = CoroutineScope(coroutineContext)
     }
 
     override fun initView() {
@@ -63,7 +78,7 @@ class BoardFragment :
         }
         // this board is not new
         if (boardId != -1) {
-            lifecycleScope.launch {
+            scope.launch {
                 viewModel.userIntent.send(BoardIntent.GetCurrentBoard(boardId))
                 viewModel.userIntent.send(BoardIntent.GetTasks(boardId))
             }
@@ -89,10 +104,7 @@ class BoardFragment :
                     is BoardState.Tasks -> {
                         renderTaskList(it.tasks)
                     }
-                    is BoardState.Deleted -> {
-                        listener?.onBoardFinished()
-                    }
-                    is BoardState.Saved -> {
+                    is BoardState.Finished -> {
                         listener?.onBoardFinished()
                     }
                 }
@@ -110,12 +122,13 @@ class BoardFragment :
         binding.etBoardName.setText(board?.title)
     }
 
-    private fun renderTaskList(list: List<Task>) {
-        if (tasksListAdapter == null) {
-            tasksListAdapter =
-                TasksListAdapter(list.toMutableList())
-            binding.rvBoard.adapter = tasksListAdapter
-        }
+    private fun renderTaskList(list: LiveData<List<Task>>?) {
+        list?.observe(viewLifecycleOwner, {
+            if(it.isNotEmpty()) {
+                tasksListAdapter = TasksListAdapter(it.toMutableList())
+                binding.rvBoard.adapter = tasksListAdapter
+            }
+        })
     }
 
     override fun onItemClick(parentView: View, childView: View, position: Int) {

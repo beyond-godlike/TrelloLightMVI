@@ -5,13 +5,11 @@ import androidx.lifecycle.LiveData
 import com.unava.dia.trellolightmvi.data.Task
 import com.unava.dia.trellolightmvi.data.api.AppDatabase
 import kotlinx.coroutines.*
+import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
 
-class TaskRepository(context: Context) {
+class TaskRepository @Inject constructor(private var context: Context, private var coroutineContext: CoroutineContext) {
 
-    private val parentJob = Job()
-    private val coroutineContext: CoroutineContext
-        get() = parentJob + Dispatchers.Default
     private val scope = CoroutineScope(coroutineContext)
 
     private val db: AppDatabase = AppDatabase.getAppDataBase(context)!!
@@ -45,7 +43,7 @@ class TaskRepository(context: Context) {
     }
 
 
-    fun findRepositoriesForTask(boardId: Int): LiveData<List<Task>>? {
+    fun findRepositoriesForBoard(boardId: Int): LiveData<List<Task>>? {
         return db.taskDao().getTasksForBoard(boardId)
     }
 

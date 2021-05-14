@@ -48,7 +48,7 @@ class BoardViewModel @Inject constructor(private var useCase: TasksUseCase) : Vi
                     b?.title = name
                     useCase.updateBoard(b!!)
                 }
-                BoardState.Saved
+                BoardState.Finished
             } catch (e: Exception) {
                 BoardState.Error(e.localizedMessage)
             }
@@ -67,11 +67,7 @@ class BoardViewModel @Inject constructor(private var useCase: TasksUseCase) : Vi
 
     private fun getTasks(boardId: Int) {
         viewModelScope.launch {
-            _state.value = try {
-                BoardState.Tasks(useCase.findRepositoriesForBoardAsync(boardId)!!)
-            } catch (e: Exception) {
-                BoardState.Error(e.localizedMessage)
-            }
+            _state.value = BoardState.Tasks(useCase.findRepositoriesForBoard(boardId))
         }
     }
 
@@ -89,7 +85,7 @@ class BoardViewModel @Inject constructor(private var useCase: TasksUseCase) : Vi
         viewModelScope.launch {
             _state.value = try {
                 useCase.deleteBoard(id)
-                BoardState.Deleted
+                BoardState.Finished
             } catch (e: java.lang.Exception) {
                 BoardState.Error(e.localizedMessage)
             }
