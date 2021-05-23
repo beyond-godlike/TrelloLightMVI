@@ -6,27 +6,24 @@ import com.unava.dia.trellolightmvi.data.Board
 
 @Dao
 interface BoardDao {
-    @Insert
-    fun insertBoard(board: Board): Long?
-
-    @Query("SELECT * from Board")
-    fun getBoards() : LiveData<List<Board>>
-
-    @Query("SELECT * from Board")
-    fun getBoardsSync() : List<Board>
-
-    @Query("SELECT * FROM Board WHERE id =:boardId")
-    fun getBoard(boardId: Int): LiveData<Board>
-
-    @Query("SELECT * FROM Board WHERE id =:boardId")
-    fun getBoardAsync(boardId: Int): Board
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertBoard(board: Board): Long?
 
     @Update
-    fun updateBoard(board: Board)
+    suspend fun updateBoard(board: Board)
 
     @Delete
-    fun deleteBoard(board: Board)
+    suspend fun deleteBoard(board: Board)
 
-    @Query("SELECT COUNT(*) FROM Board")
-    fun countAllBoards(): Int
+    @Query("SELECT * from boards")
+    fun getBoards() : LiveData<List<Board>>
+
+    @Query("SELECT * from boards")
+    fun getBoardsSync() : List<Board>
+
+    @Query("SELECT * FROM boards WHERE id =:boardId")
+    fun getBoard(boardId: Long): LiveData<Board>
+
+    @Query("SELECT * FROM boards WHERE id =:boardId")
+    fun getBoardAsync(boardId: Long): Board
 }

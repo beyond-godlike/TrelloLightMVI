@@ -9,11 +9,11 @@ import javax.inject.Singleton
 @Singleton
 class TaskUseCase @Inject constructor(private var taskRepository: TaskRepository) {
 
-    fun getTask(id: Int): LiveData<Task> {
+    fun getTask(id: Long): LiveData<Task> {
         return taskRepository.getTask(id)
     }
 
-    fun deleteTask(id: Int) {
+    fun deleteTask(id: Long) {
         taskRepository.deleteTask(id)
     }
 
@@ -25,7 +25,7 @@ class TaskUseCase @Inject constructor(private var taskRepository: TaskRepository
         taskRepository.insertTask(task)
     }
 
-    fun getTaskAsync(taskId: Int) : Task? {
+    fun getTaskAsync(taskId: Long) : Task? {
         return taskRepository.getTaskAsync(taskId)
     }
 

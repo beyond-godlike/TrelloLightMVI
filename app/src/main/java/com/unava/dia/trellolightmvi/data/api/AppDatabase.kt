@@ -11,7 +11,7 @@ import com.unava.dia.trellolightmvi.data.api.dao.BoardDao
 import com.unava.dia.trellolightmvi.data.api.dao.TaskDao
 import com.unava.dia.trellolightmvi.util.TaskListConverter
 
-@Database(entities = [Board::class, Task::class], version = 1, exportSchema = false)
+@Database(entities = [Board::class, Task::class], version = 1)
 @TypeConverters(TaskListConverter::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun boardDao(): BoardDao

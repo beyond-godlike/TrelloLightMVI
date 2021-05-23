@@ -6,24 +6,16 @@ import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.unava.dia.trellolightmvi.R
 import com.unava.dia.trellolightmvi.data.Board
 import com.unava.dia.trellolightmvi.data.Task
 import com.unava.dia.trellolightmvi.databinding.FragmentBoardBinding
 import com.unava.dia.trellolightmvi.ui.base.BaseFragment
-import com.unava.dia.trellolightmvi.ui.fragments.main.MainFragment
-import com.unava.dia.trellolightmvi.ui.fragments.task.TaskFragment
 import com.unava.dia.trellolightmvi.ui.fragments.task.TasksListAdapter
 import com.unava.dia.trellolightmvi.util.RecyclerItemClickListener
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.channels.map
-import kotlinx.coroutines.channels.produce
-import kotlinx.coroutines.channels.sendBlocking
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -37,7 +29,7 @@ class BoardFragment :
     private var tasksListAdapter: TasksListAdapter? = null
     private lateinit var viewModel: BoardViewModel
     private var listener: BoardInteractionListener? = null
-    var boardId: Int = -1 // boardId = -1 means we want to create new board
+    var boardId: Long = -1 // boardId = -1 means we want to create new board
 
     @Inject
     lateinit var coroutineContext: CoroutineContext
@@ -48,14 +40,15 @@ class BoardFragment :
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(this).get(BoardViewModel::class.java)
-        boardId = arguments?.getInt("board_id")!!
+        boardId = arguments?.getLong("board_id")!!
         scope = CoroutineScope(coroutineContext)
     }
 
     override fun initView() {
+        showToast(boardId.toString())
         binding.btAddCard.setOnClickListener {
             // save board if new
-            if (boardId == -1) {
+            if (boardId == -1L) {
                 lifecycleScope.launch {
                     viewModel.userIntent.send(BoardIntent.AddNewBoard(binding.etBoardName.text.toString()))
                 }
@@ -77,7 +70,7 @@ class BoardFragment :
             }
         }
         // this board is not new
-        if (boardId != -1) {
+        if (boardId != -1L) {
             scope.launch {
                 viewModel.userIntent.send(BoardIntent.GetCurrentBoard(boardId))
                 viewModel.userIntent.send(BoardIntent.GetTasks(boardId))
@@ -96,7 +89,7 @@ class BoardFragment :
                         showToast(it.error!!)
                     }
                     is BoardState.BoardId -> {
-                        boardId = it.id?.toInt() ?: -1
+                        boardId = it.id ?: -1L
                     }
                     is BoardState.CurrentBoard -> {
                         renderBoard(it.board)
@@ -124,7 +117,7 @@ class BoardFragment :
 
     private fun renderTaskList(list: LiveData<List<Task>>?) {
         list?.observe(viewLifecycleOwner, {
-            if(it.isNotEmpty()) {
+            if (it.isNotEmpty()) {
                 tasksListAdapter = TasksListAdapter(it.toMutableList())
                 binding.rvBoard.adapter = tasksListAdapter
             }
@@ -135,6 +128,7 @@ class BoardFragment :
         val task = tasksListAdapter!!.getItem(position)
         listener?.onNavigateToTaskFragment(boardId, task.id!!)
     }
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         if (context is BoardInteractionListener) {
@@ -143,13 +137,14 @@ class BoardFragment :
             throw RuntimeException("$context must implement InteractionListener")
         }
     }
+
     override fun onDetach() {
         super.onDetach()
         listener = null
     }
 
-    interface BoardInteractionListener  {
-        fun onNavigateToTaskFragment(boardId: Int, taskId: Int)
+    interface BoardInteractionListener {
+        fun onNavigateToTaskFragment(boardId: Long, taskId: Long)
         fun onBoardFinished()
     }
 }

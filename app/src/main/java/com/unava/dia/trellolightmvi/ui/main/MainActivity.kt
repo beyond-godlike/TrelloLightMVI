@@ -2,10 +2,8 @@ package com.unava.dia.trellolightmvi.ui.main
 
 import android.os.Bundle
 import android.view.Menu
-import android.view.View
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
-import androidx.navigation.fragment.NavHostFragment
 import com.unava.dia.trellolightmvi.R
 import com.unava.dia.trellolightmvi.ui.base.BaseActivity
 import com.unava.dia.trellolightmvi.ui.fragments.board.BoardFragment
@@ -15,7 +13,9 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : BaseActivity(), MainFragment.MainInteractionListener, BoardFragment.BoardInteractionListener,
-   TaskFragment.TaskInteractionListener {
+   TaskFragment.TaskInteractionListener
+
+    {
 
     lateinit var navController: NavController
 
@@ -26,21 +26,21 @@ class MainActivity : BaseActivity(), MainFragment.MainInteractionListener, Board
 
     override fun layoutId(): Int = R.layout.activity_main
 
-    override fun onCreateBoardClicked(boardId: Int) {
-        val bundle = Bundle()
-        bundle.putInt("board_id", boardId)
-        navController.navigate(R.id.boardFragment, bundle)
-    }
-
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
         return true
     }
 
-    override fun onNavigateToTaskFragment(boardId: Int, taskId: Int) {
+    override fun onCreateBoardClicked(boardId: Long) {
         val bundle = Bundle()
-        bundle.putInt("board_id", boardId)
-        bundle.putInt("task_id", taskId)
+        bundle.putLong("board_id", boardId)
+        navController.navigate(R.id.boardFragment, bundle)
+    }
+
+    override fun onNavigateToTaskFragment(boardId: Long, taskId: Long) {
+        val bundle = Bundle()
+        bundle.putLong("board_id", boardId)
+        bundle.putLong("task_id", taskId)
         navController.navigate(R.id.taskFragment, bundle)
     }
 
@@ -48,9 +48,9 @@ class MainActivity : BaseActivity(), MainFragment.MainInteractionListener, Board
         navController.navigate(R.id.mainFragment)
     }
 
-    override fun onTaskFinished(boardId: Int) {
+    override fun onTaskFinished(boardId: Long) {
         val bundle = Bundle()
-        bundle.putInt("board_id", boardId)
+        bundle.putLong("board_id", boardId)
         navController.navigate(R.id.boardFragment, bundle)
     }
 

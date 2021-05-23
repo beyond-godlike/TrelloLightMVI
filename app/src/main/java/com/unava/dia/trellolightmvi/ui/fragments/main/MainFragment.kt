@@ -99,6 +99,6 @@ class MainFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::infl
     }
 
     interface MainInteractionListener {
-        fun onCreateBoardClicked(boardId: Int)
+        fun onCreateBoardClicked(boardId: Long)
     }
 }

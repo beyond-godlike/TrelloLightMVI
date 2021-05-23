@@ -38,10 +38,10 @@ class BoardViewModel @Inject constructor(private var useCase: TasksUseCase) : Vi
         }
     }
 
-    private fun saveBoard(boardId: Int, name: String) {
+    private fun saveBoard(boardId: Long, name: String) {
         viewModelScope.launch {
             _state.value = try {
-                if (boardId == -1) {
+                if (boardId == -1L) {
                     useCase.insertBoard(Board(name))
                 } else {
                     val b = useCase.getBoardAsync(boardId)
@@ -55,7 +55,7 @@ class BoardViewModel @Inject constructor(private var useCase: TasksUseCase) : Vi
         }
     }
 
-    private fun getCurrentBoard(boardId: Int) {
+    private fun getCurrentBoard(boardId: Long) {
         viewModelScope.launch {
             _state.value = try {
                 BoardState.CurrentBoard(useCase.getBoardAsync(boardId))
@@ -65,7 +65,7 @@ class BoardViewModel @Inject constructor(private var useCase: TasksUseCase) : Vi
         }
     }
 
-    private fun getTasks(boardId: Int) {
+    private fun getTasks(boardId: Long) {
         viewModelScope.launch {
             _state.value = BoardState.Tasks(useCase.findRepositoriesForBoard(boardId))
         }
@@ -81,7 +81,7 @@ class BoardViewModel @Inject constructor(private var useCase: TasksUseCase) : Vi
         }
     }
 
-    private fun deleteBoard(id: Int) {
+    private fun deleteBoard(id: Long) {
         viewModelScope.launch {
             _state.value = try {
                 useCase.deleteBoard(id)
