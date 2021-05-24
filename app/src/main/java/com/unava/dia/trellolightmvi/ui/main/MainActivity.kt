@@ -12,19 +12,18 @@ import com.unava.dia.trellolightmvi.ui.fragments.task.TaskFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MainActivity : BaseActivity(), MainFragment.MainInteractionListener, BoardFragment.BoardInteractionListener,
-   TaskFragment.TaskInteractionListener
-
-    {
+class MainActivity : BaseActivity(), MainFragment.MainInteractionListener,
+    BoardFragment.BoardInteractionListener,
+    TaskFragment.TaskInteractionListener {
 
     lateinit var navController: NavController
+
+    override fun layoutId(): Int = R.layout.activity_main
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         navController = Navigation.findNavController(this, R.id.frameContainer)
     }
-
-    override fun layoutId(): Int = R.layout.activity_main
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
@@ -55,7 +54,12 @@ class MainActivity : BaseActivity(), MainFragment.MainInteractionListener, Board
     }
 
     override fun onBackPressed() {
-        navController.popBackStack()
+        when (navController.currentDestination?.id) {
+            R.id.mainFragment -> this.finish()
+            R.id.taskFragment -> super.onBackPressed()
+            R.id.boardFragment -> navController.navigate(R.id.mainFragment)
+            else -> super.onBackPressed()
+        }
     }
 
 }

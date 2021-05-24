@@ -28,7 +28,7 @@ class BoardFragment :
 
     private var tasksListAdapter: TasksListAdapter? = null
     private lateinit var viewModel: BoardViewModel
-    private var listener: BoardInteractionListener? = null
+    var listener: BoardInteractionListener? = null
     var boardId: Long = -1 // boardId = -1 means we want to create new board
 
     @Inject

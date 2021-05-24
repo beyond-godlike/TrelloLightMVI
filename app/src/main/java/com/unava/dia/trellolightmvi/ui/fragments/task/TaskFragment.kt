@@ -17,11 +17,13 @@ class TaskFragment :
     BaseFragment<FragmentTaskBinding>(FragmentTaskBinding::inflate) {
 
     private lateinit var viewModel: TaskViewModel
-    override fun layoutId(): Int = R.layout.fragment_task
-    private var listener: TaskInteractionListener? = null
+    var listener: TaskInteractionListener? = null
 
     var boardId: Long = -1
     var taskId: Long = -1 // taskId = -1 means we want to create new board
+
+    override fun layoutId(): Int = R.layout.fragment_task
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,7 +33,7 @@ class TaskFragment :
     }
 
     override fun initView() {
-        if(taskId != -1L) {
+        if (taskId != -1L) {
             lifecycleScope.launch {
                 viewModel.userIntent.send(TaskIntent.GetCurrentTask(taskId))
             }
