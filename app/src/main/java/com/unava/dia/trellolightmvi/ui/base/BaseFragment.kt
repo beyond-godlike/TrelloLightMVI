@@ -15,6 +15,9 @@ abstract class BaseFragment<VB : ViewBinding>(private val inflate: Inflate<VB>) 
     private var _binding: VB? = null
     val binding get() = _binding!!
 
+    @LayoutRes
+    abstract fun layoutId(): Int
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -35,9 +38,6 @@ abstract class BaseFragment<VB : ViewBinding>(private val inflate: Inflate<VB>) 
         super.onDestroyView()
         _binding = null
     }
-
-    @LayoutRes
-    abstract fun layoutId(): Int
 
     abstract fun observeViewModel()
     abstract fun setupRecyclerView()

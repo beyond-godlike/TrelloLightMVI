@@ -4,11 +4,8 @@ import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
 
-@Entity
+@Entity(tableName = "boards")
 data class Board(var title: String) {
     @PrimaryKey(autoGenerate = true)
-    var id: Int? = null
-
-    @Ignore
-    var tasks: List<Task>? = null
+    var id: Long? = null
 }

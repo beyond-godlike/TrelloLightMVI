@@ -22,8 +22,9 @@ class MainFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::infl
 
     private lateinit var viewModel: MainViewModel
     private var boardsListAdapter: BoardsListAdapter? = null
-    override fun layoutId(): Int = R.layout.fragment_main
     private var listener: MainInteractionListener? = null
+
+    override fun layoutId(): Int = R.layout.fragment_main
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -99,6 +100,6 @@ class MainFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::infl
     }
 
     interface MainInteractionListener {
-        fun onCreateBoardClicked(boardId: Int)
+        fun onCreateBoardClicked(boardId: Long)
     }
 }

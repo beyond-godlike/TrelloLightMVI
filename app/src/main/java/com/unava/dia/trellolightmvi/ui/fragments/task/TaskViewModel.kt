@@ -4,8 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.unava.dia.trellolightmvi.data.Task
 import com.unava.dia.trellolightmvi.data.api.useCases.TaskUseCase
-import com.unava.dia.trellolightmvi.ui.fragments.board.BoardIntent
-import com.unava.dia.trellolightmvi.ui.fragments.board.BoardState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -39,7 +37,7 @@ class TaskViewModel @Inject constructor(private var useCase: TaskUseCase) : View
         }
     }
 
-    private fun getTaskAsync(taskId: Int) {
+    private fun getTaskAsync(taskId: Long) {
         viewModelScope.launch {
             _state.value = TaskState.CurrentTask(useCase.getTaskAsync(taskId))
         }
@@ -52,7 +50,7 @@ class TaskViewModel @Inject constructor(private var useCase: TaskUseCase) : View
         }
     }
 
-    private fun updateTask(taskId: Int, title: String, description: String) {
+    private fun updateTask(taskId: Long, title: String, description: String) {
         viewModelScope.launch {
             // find existing task by taskId
             // update it from fields
@@ -68,7 +66,7 @@ class TaskViewModel @Inject constructor(private var useCase: TaskUseCase) : View
         }
     }
 
-    private fun deleteTask(taskId: Int) {
+    private fun deleteTask(taskId: Long) {
         viewModelScope.launch {
             useCase.deleteTask(taskId)
             _state.value = TaskState.Finished

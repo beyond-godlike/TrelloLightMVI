@@ -8,7 +8,6 @@ import com.unava.dia.trellolightmvi.R
 import com.unava.dia.trellolightmvi.data.Task
 import com.unava.dia.trellolightmvi.databinding.FragmentTaskBinding
 import com.unava.dia.trellolightmvi.ui.base.BaseFragment
-import com.unava.dia.trellolightmvi.ui.fragments.board.BoardFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -18,21 +17,23 @@ class TaskFragment :
     BaseFragment<FragmentTaskBinding>(FragmentTaskBinding::inflate) {
 
     private lateinit var viewModel: TaskViewModel
-    override fun layoutId(): Int = R.layout.fragment_task
-    private var listener: TaskInteractionListener? = null
+    var listener: TaskInteractionListener? = null
 
-    var boardId: Int = -1
-    var taskId: Int = -1 // taskId = -1 means we want to create new board
+    var boardId: Long = -1
+    var taskId: Long = -1 // taskId = -1 means we want to create new board
+
+    override fun layoutId(): Int = R.layout.fragment_task
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(this).get(TaskViewModel::class.java)
-        boardId = arguments?.getInt("board_id")!!
-        taskId = arguments?.getInt("task_id")!!
+        boardId = arguments?.getLong("board_id")!!
+        taskId = arguments?.getLong("task_id")!!
     }
 
     override fun initView() {
-        if(taskId != -1) {
+        if (taskId != -1L) {
             lifecycleScope.launch {
                 viewModel.userIntent.send(TaskIntent.GetCurrentTask(taskId))
             }
@@ -46,7 +47,7 @@ class TaskFragment :
 
         binding.btDone.setOnClickListener {
             lifecycleScope.launch {
-                if (taskId == -1) {
+                if (taskId == -1L) {
                     viewModel.userIntent.send(TaskIntent.SaveTask(
                         Task(binding.etTitle.text.toString(),
                             binding.etDesc.text.toString(),
@@ -113,6 +114,6 @@ class TaskFragment :
     }
 
     interface TaskInteractionListener {
-        fun onTaskFinished(boardId: Int)
+        fun onTaskFinished(boardId: Long)
     }
 }
