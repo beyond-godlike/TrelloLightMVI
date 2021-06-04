@@ -56,6 +56,40 @@ class BoardViewModelTest {
                 }
             }
         }
+    }
 
+    @Test
+    fun `delete inserted board`() {
+        testScope.launch {
+            viewModel.userIntent.send(BoardIntent.AddNewBoard("board"))
+        }
+
+        testScope.launch {
+            viewModel.state.collect {
+                when(it) {
+                    is BoardState.CurrentBoard -> {
+                        assertThat(viewModel.state).isEqualTo(BoardState.CurrentBoard(it.board))
+                        assertThat(it.board.title).isEqualTo("board")
+                        val boardId = it.board.id ?: -1
+
+                        // check that we inserted the board and got its id
+                        assertThat(boardId).isNotEqualTo(-1)
+                        // delete this board by id
+                        viewModel.userIntent.send(BoardIntent.DeleteBoard(boardId))
+                    }
+                }
+            }
+        }
+
+        // make sure that after deleting our state changet to Finished
+        testScope.launch {
+            viewModel.state.collect {
+                when(it) {
+                    is BoardState.CurrentBoard -> {
+                        assertThat(viewModel.state).isEqualTo(BoardState.Finished)
+                    }
+                }
+            }
+        }
     }
 }
