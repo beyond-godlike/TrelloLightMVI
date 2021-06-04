@@ -10,15 +10,15 @@ import kotlin.coroutines.CoroutineContext
 class BoardRepository @Inject constructor(
     private var context: Context,
     private var coroutineContext: CoroutineContext,
-) {
+) : IBoardRepository {
     private val scope = CoroutineScope(coroutineContext)
 
     private val db: AppDatabase = AppDatabase.getAppDataBase(context)!!
 
-    fun getBoards() = db.boardDao().getBoards()
+    override fun getBoards() = db.boardDao().getBoards()
     fun getBoardsSync() = db.boardDao().getBoardsSync()
 
-    fun getBoard(id: Long) = db.boardDao().getBoard(id)
+    override fun getBoard(id: Long) = db.boardDao().getBoard(id)
 
 
     fun getBoardAsync(id: Long): Board = runBlocking(Dispatchers.Default) {
@@ -27,17 +27,17 @@ class BoardRepository @Inject constructor(
         }
     }
 
-    fun insertBoard(board: Board): Long? = runBlocking(Dispatchers.Default) {
+    override suspend fun insertBoard(board: Board): Long? = runBlocking(Dispatchers.Default) {
         return@runBlocking withContext(Dispatchers.Default) {
             db.boardDao().insertBoard(board)
         }
     }
 
-    fun updateBoard(board: Board) {
+    override suspend fun updateBoard(board: Board) {
         scope.launch { db.boardDao().updateBoard(board) }
     }
 
-    fun deleteBoard(id: Long) {
+    override suspend fun deleteBoard(id: Long) {
         scope.launch { db.boardDao().deleteBoard(getBoardAsync(id)) }
     }
 }
