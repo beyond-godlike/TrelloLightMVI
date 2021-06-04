@@ -2,11 +2,10 @@ package com.unava.dia.trellolightmvi.data.api.useCases
 
 import androidx.lifecycle.LiveData
 import com.unava.dia.trellolightmvi.data.Board
-import com.unava.dia.trellolightmvi.data.api.repository.BoardRepository
+import com.unava.dia.trellolightmvi.repository.IBoardRepository
 import javax.inject.Inject
-import javax.inject.Singleton
 
-class BoardsUseCase @Inject constructor(private var boardRepository: BoardRepository) {
+class BoardsUseCase @Inject constructor(private var boardRepository: IBoardRepository) {
     fun findAllBoardsAsync(): LiveData<List<Board>>? {
         return boardRepository.getBoards()
     }

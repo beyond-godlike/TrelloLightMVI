@@ -21,7 +21,6 @@ object AppModule {
     }
 
     @Provides
-    @ViewModelScoped
     fun provideContext(application: Application): Context {
         return application
     }

@@ -1,17 +1,14 @@
 package com.unava.dia.trellolightmvi.di
 
-import com.unava.dia.trellolightmvi.data.api.repository.BoardRepository
-import com.unava.dia.trellolightmvi.data.api.repository.TaskRepository
+import com.unava.dia.trellolightmvi.repository.BoardRepository
+import com.unava.dia.trellolightmvi.repository.TaskRepository
 import com.unava.dia.trellolightmvi.data.api.useCases.BoardsUseCase
 import com.unava.dia.trellolightmvi.data.api.useCases.TaskUseCase
 import com.unava.dia.trellolightmvi.data.api.useCases.TasksUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ViewModelComponent
-import dagger.hilt.android.scopes.ViewModelScoped
 import dagger.hilt.components.SingletonComponent
-import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
