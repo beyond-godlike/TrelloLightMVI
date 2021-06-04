@@ -1,4 +1,4 @@
-package com.unava.dia.trellolightmvi.data.api.repository
+package com.unava.dia.trellolightmvi.repository
 
 import android.content.Context
 import androidx.lifecycle.LiveData
@@ -20,7 +20,7 @@ class TaskRepository @Inject constructor(
     override fun getTasks() = db.taskDao().getTasks()
     override fun getTask(id: Long) = db.taskDao().getTask(id)
 
-    fun getTaskAsync(id: Long): Task = runBlocking(Dispatchers.Default) {
+    override fun getTaskAsync(id: Long): Task = runBlocking(Dispatchers.Default) {
         return@runBlocking withContext(Dispatchers.Default) {
             db.taskDao().getTaskAsync(id)
         }
@@ -44,7 +44,7 @@ class TaskRepository @Inject constructor(
         return db.taskDao().getTasksForBoard(boardId)
     }
 
-    fun findRepositoriesForBoardAsync(boardId: Long): List<Task> =
+    override fun findRepositoriesForBoardAsync(boardId: Long): List<Task> =
         runBlocking(Dispatchers.Default) {
             return@runBlocking withContext(Dispatchers.Default) {
                 db.taskDao().getTasksForBoardAsync(boardId)

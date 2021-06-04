@@ -1,4 +1,4 @@
-package com.unava.dia.trellolightmvi.data.api.repository
+package com.unava.dia.trellolightmvi.repository
 
 import android.content.Context
 import com.unava.dia.trellolightmvi.data.Board
@@ -16,12 +16,12 @@ class BoardRepository @Inject constructor(
     private val db: AppDatabase = AppDatabase.getAppDataBase(context)!!
 
     override fun getBoards() = db.boardDao().getBoards()
-    fun getBoardsSync() = db.boardDao().getBoardsSync()
+    override fun getBoardsSync() = db.boardDao().getBoardsSync()
 
     override fun getBoard(id: Long) = db.boardDao().getBoard(id)
 
 
-    fun getBoardAsync(id: Long): Board = runBlocking(Dispatchers.Default) {
+    override fun getBoardAsync(id: Long): Board = runBlocking(Dispatchers.Default) {
         return@runBlocking withContext(Dispatchers.Default) {
             db.boardDao().getBoardAsync(id)
         }

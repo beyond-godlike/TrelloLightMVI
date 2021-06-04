@@ -5,12 +5,12 @@ import androidx.lifecycle.viewModelScope
 import com.unava.dia.trellolightmvi.data.Board
 import com.unava.dia.trellolightmvi.data.api.useCases.TasksUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.consumeAsFlow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import javax.inject.Inject
 @HiltViewModel
 class BoardViewModel @Inject constructor(private var useCase: TasksUseCase) : ViewModel() {
@@ -58,7 +58,7 @@ class BoardViewModel @Inject constructor(private var useCase: TasksUseCase) : Vi
     private fun getCurrentBoard(boardId: Long) {
         viewModelScope.launch {
             _state.value = try {
-                BoardState.CurrentBoard(useCase.getBoardAsync(boardId))
+                BoardState.CurrentBoard(useCase.getBoardAsync(boardId)!!)
             } catch (e: Exception) {
                 BoardState.Error(e.localizedMessage)
             }

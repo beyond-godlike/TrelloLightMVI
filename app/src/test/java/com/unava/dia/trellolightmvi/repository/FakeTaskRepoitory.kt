@@ -1,4 +1,4 @@
-package com.unava.dia.trellolightmvi.data.api.repository
+package com.unava.dia.trellolightmvi.repository
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -46,5 +46,13 @@ class FakeTaskRepoitory : ITaskRepository {
 
     override fun findRepositoriesForBoard(boardId: Long): LiveData<List<Task>> {
         return observableTasksForBoard
+    }
+
+    override fun getTaskAsync(taskId: Long): Task? {
+        return observableTask.value
+    }
+
+    override fun findRepositoriesForBoardAsync(boardId: Long): List<Task> {
+        return observableTasks.value!!
     }
 }

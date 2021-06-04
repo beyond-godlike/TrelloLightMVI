@@ -1,4 +1,4 @@
-package com.unava.dia.trellolightmvi.data.api.repository
+package com.unava.dia.trellolightmvi.repository
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -33,6 +33,14 @@ class FakeBoardRepository : IBoardRepository {
     override suspend fun deleteBoard(id: Long) {
         boards.removeAt((id + 1).toInt())
         refreshLiveData()
+    }
+
+    override fun getBoardAsync(id: Long): Board {
+        return observableBoard.value!!
+    }
+
+    override fun getBoardsSync(): List<Board> {
+        return observableBoards.value!!
     }
 
     override fun getBoards(): LiveData<List<Board>> {

@@ -1,4 +1,4 @@
-package com.unava.dia.trellolightmvi.data.api.repository
+package com.unava.dia.trellolightmvi.repository
 
 import androidx.lifecycle.LiveData
 import com.unava.dia.trellolightmvi.data.Task
@@ -11,4 +11,7 @@ interface ITaskRepository {
     fun getTasks() : LiveData<List<Task>>
     fun getTask(id: Long) : LiveData<Task>
     fun findRepositoriesForBoard(boardId: Long) : LiveData<List<Task>>
+
+    fun getTaskAsync(taskId: Long): Task?
+    fun findRepositoriesForBoardAsync(boardId: Long) : List<Task>
 }
